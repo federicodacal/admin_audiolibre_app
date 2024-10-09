@@ -9,4 +9,6 @@ suscripcionesRoutes.post('/suscripciones', suscripcionController.crear_suscripci
 suscripcionesRoutes.put('/suscripciones', suscripcionController.actualizar_suscripcion);
 suscripcionesRoutes.delete('/suscripciones', suscripcionController.eliminar_suscripcion);
 
+suscripcionesRoutes.get('/mongo', suscripcionController.obtener_mongo);
+
 module.exports = suscripcionesRoutes;
