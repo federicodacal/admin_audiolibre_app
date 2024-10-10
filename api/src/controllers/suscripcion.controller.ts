@@ -11,9 +11,10 @@ export const obtener_suscripciones = async (req:any, res:any) =>
     
     try {
         const suscripciones = await obtenerTodas();
-        obj_response.msj_a_mostrar = "Suscripciones obtenidas.";
-        obj_response.content = suscripciones;
-        res.status(200).json(obj_response);
+        //obj_response.msj_a_mostrar = "Suscripciones obtenidas.";
+        //obj_response.content = suscripciones;
+        //res.status(200).json(obj_response);
+        res.render('home', { suscripciones })
     } catch (error) {
         console.error(error);
         obj_response.hubo_error = true;
