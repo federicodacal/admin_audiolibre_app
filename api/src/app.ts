@@ -20,4 +20,8 @@ app.set('views', './src/views');
 
 app.use('/api/', suscripcionRoutes);
 
+app.use((req, res, next) => {
+    res.status(404).render('error');
+});
+
 export default app;
