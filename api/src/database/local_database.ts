@@ -1,19 +1,20 @@
 import mysql from 'mysql2'
 
-const connection = mysql.createConnection({
-    host: '127.0.0.1',
-    user: 'root',
-    password: '',
-    database: 'admin_audiolibre_db'
-})
+const pool = mysql.createPool({
+    host: process.env.MYSQL_HOST,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DB
+});
 
-connection.connect((err:any) => {
+pool.getConnection((err:any, conn:any) => {
     if(err) {
         console.error("Ocurrió un problema conectando a la base de datos: ", err);
         return;
     }
     console.log("Conexión exitosa");
+    conn.release();
 });
 
-module.exports = connection;
+module.exports = pool;
 
