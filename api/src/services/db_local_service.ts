@@ -1,5 +1,6 @@
 import { Suscripcion } from '../models/suscripcion';
 const pool = require('../database/local_database');  
+
 export const obtenerTodas = (): Promise<Suscripcion[]> => {
     return new Promise((resolve, reject) => {
         pool.getConnection((err: any, connection: any) => {
