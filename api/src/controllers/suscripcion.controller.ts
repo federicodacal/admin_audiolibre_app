@@ -26,7 +26,7 @@ export const obtener_suscripcion_por_id = async (req:any, res:any) => {
 
     if(!response.hubo_error) {
         const suscripcion = response.content;
-        res.render('home', { suscripcion });
+        res.render('suscripcion', { suscripcion });
     }
     else {
         res.render('error');
