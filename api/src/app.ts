@@ -12,7 +12,7 @@ const suscripcionRoutes = require('./routes/suscripcion.routes.js');
 app.use(morgan('dev'));
 app.use(helmet());
 app.use(cors());
-app.use(express.urlencoded);
+app.use(express.urlencoded());
 app.use(express.json());
 
 /* Template engine */

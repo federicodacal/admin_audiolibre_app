@@ -1,5 +1,5 @@
-import { obtenerTodas, obtenerPorId, insertarSuscripcion, actualizarSuscripcion, eliminarSuscripcion } from '../services/db_local_service'; 
-import { Suscripcion } from '../models/suscripcion';
+ import { Suscripcion, obtenerTodas, obtenerPorId, insertarSuscripcion, actualizarSuscripcion, eliminarSuscripcion } from '../models/suscripcion';
+ import { getSuscripcion, getSuscripciones } from '../services/suscripcion_service';
 
 const connect_mongo = require('../database/connect_mongo');
 const SuscripcionModel = require('../models/suscripcion.model');
@@ -7,41 +7,29 @@ connect_mongo();
 
 export const obtener_suscripciones = async (req:any, res:any) => 
 {
-    let obj_response = {hubo_error: false, msj_a_mostrar:"" ,content: {}}
-    
-    try {
-        const suscripciones = await obtenerTodas();
-        //obj_response.msj_a_mostrar = "Suscripciones obtenidas.";
-        //obj_response.content = suscripciones;
-        //res.status(200).json(obj_response);
-        res.render('home', { suscripciones })
-    } catch (error) {
-        console.error(error);
-        obj_response.hubo_error = true;
-        obj_response.msj_a_mostrar = "Ocurrió un problema obteniendo las suscripciones.";
-        res.status(500).json(obj_response);
+    const response = await getSuscripciones();
+
+    if(!response.hubo_error) {
+        const suscripciones = response.content;
+        res.render('home', { suscripciones });
+    }
+    else {
+        res.render('error');
     }
 };
 
 export const obtener_suscripcion_por_id = async (req:any, res:any) => {
-    let obj_response = { hubo_error: false, msj_a_mostrar: "", content: {} };
 
-    try {
-        const id = Number(req.params.id); 
-        const suscripcion = await obtenerPorId(id);
-        if (suscripcion) {
-            obj_response.msj_a_mostrar = "Suscripción obtenida.";
-            obj_response.content = suscripcion;
-            res.status(200).json(obj_response);
-        } else {
-            obj_response.msj_a_mostrar = "Suscripción no encontrada.";
-            res.status(404).json(obj_response);
-        }
-    } catch (error) {
-        console.error(error);
-        obj_response.hubo_error = true;
-        obj_response.msj_a_mostrar = "Ocurrió un problema obteniendo la suscripción.";
-        res.status(500).json(obj_response);
+    const id = Number(req.params.id); 
+
+    const response = await getSuscripcion(id);
+
+    if(!response.hubo_error) {
+        const suscripcion = response.content;
+        res.render('home', { suscripcion });
+    }
+    else {
+        res.render('error');
     }
 };
 
