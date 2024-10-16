@@ -2,6 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
+import path from 'path';
 
 require('dotenv').config();
 
@@ -17,7 +18,7 @@ app.use(express.json());
 
 /* Template engine */
 app.set('view engine', 'ejs');
-app.set('views', './src/views');
+app.set('views', path.join(__dirname, 'views'));
 
 app.use('/api/', suscripcionRoutes);
 

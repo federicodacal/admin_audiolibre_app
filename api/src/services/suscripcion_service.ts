@@ -42,6 +42,23 @@ export const getSuscripcion = async (id:number) => {
     }
 }
 
+export const addSuscripcion = async (suscripcion:any) => {
+
+    let obj_response = { hubo_error: false, msj_a_mostrar: "", content: {} };
+
+    try {
+        const id = await insertarSuscripcion(suscripcion);
+        obj_response.msj_a_mostrar = `Suscripción creada con éxito con ID: ${id}.`;
+        obj_response.content = { id };
+        return obj_response;
+    } catch (error) {
+        console.error(error);
+        obj_response.hubo_error = true;
+        obj_response.msj_a_mostrar = `Ocurrió un problema insertando la suscripción ${suscripcion.id}: ${error}`;
+        return obj_response;
+    }
+}
+
 export const updateSuscripcion = async (suscripcion:Suscripcion) => {
 
     let obj_response = { hubo_error: false, msj_a_mostrar: "", content: {} };
@@ -84,6 +101,7 @@ export const deleteSuscripcion = async(id:number) => {
 module.exports = {
     getSuscripciones, 
     getSuscripcion,
+    addSuscripcion,
     updateSuscripcion,
     deleteSuscripcion
 }

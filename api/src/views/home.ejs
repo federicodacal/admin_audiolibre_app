@@ -11,7 +11,9 @@
         <h1>Suscripciones</h1>
     </header>
 
-    <div class="container my-4">
+    <div class="container my-4 text-center">
+        <a href="/api/nuevaSuscripcion" class="btn btn-success mb-3">Crear nueva suscripción</a>
+        
         <div class="row">
             <% if (suscripciones.length > 0) { %>
                 <% suscripciones.forEach(function(suscripcion) { %>

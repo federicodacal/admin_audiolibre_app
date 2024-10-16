@@ -1,8 +1,5 @@
- import { Suscripcion, obtenerTodas, obtenerPorId, insertarSuscripcion, actualizarSuscripcion, eliminarSuscripcion } from '../models/suscripcion';
- import { getSuscripciones, 
-    getSuscripcion,
-    updateSuscripcion,
-    deleteSuscripcion } from '../services/suscripcion_service';
+ import { Suscripcion } from '../models/suscripcion';
+ import { getSuscripciones, getSuscripcion, updateSuscripcion, deleteSuscripcion, addSuscripcion } from '../services/suscripcion_service';
 
 const connect_mongo = require('../database/connect_mongo');
 const SuscripcionModel = require('../models/suscripcion.model');
@@ -36,32 +33,30 @@ export const obtener_suscripcion_por_id = async (req:any, res:any) => {
     }
 };
 
-export const crear_suscripcion = async (req:any, res:any) => {
-    let obj_response = { hubo_error: false, msj_a_mostrar: "", content: {} };
+export const mostrar_view_crear = async (req:any, res:any) => {
+    console.log('En view crear_suscripcion');
+    res.render('crear_suscripcion');
+};
 
-    try {
-        const { tipo, duracion_meses, porcentaje_plataforma } = req.body;
-        const nuevaSuscripcion = new Suscripcion(0, tipo, duracion_meses, porcentaje_plataforma); 
-        const id = await insertarSuscripcion(nuevaSuscripcion);
-        obj_response.msj_a_mostrar = `Suscripción creada con éxito con ID: ${id}.`;
-        obj_response.content = { id };
-        res.status(201).json(obj_response);
-    } catch (error) {
-        console.error(error);
-        obj_response.hubo_error = true;
-        obj_response.msj_a_mostrar = "Ocurrió un problema creando la suscripción.";
-        res.status(500).json(obj_response);
+export const crear_suscripcion = async (req:any, res:any) => {
+    
+    const { tipo, duracion_meses, porcentaje_plataforma } = req.body; 
+    const suscripcionNueva = { tipo, duracion_meses, porcentaje_plataforma };
+
+    const response = await addSuscripcion(suscripcionNueva);
+
+    if(!response.hubo_error) {
+        res.redirect('/api/suscripciones/');
     }
+    else{
+        res.render('error');
+    } 
 };
 
 export const actualizar_suscripcion = async (req:any, res:any) => {
     const id = req.params.id; 
     const { tipo, duracion_meses, porcentaje_plataforma } = req.body; 
     const suscripcionModificar = new Suscripcion(id, tipo, duracion_meses, porcentaje_plataforma);
-
-    console.log("estoy en update");
-    console.log("ID:"+id);
-    console.log(suscripcionModificar.toString());
 
     const response = await updateSuscripcion(suscripcionModificar);
 
@@ -105,6 +100,7 @@ export const obtener_mongo  = async (req:any, res:any) => {
 module.exports = {
     obtener_suscripciones,
     obtener_suscripcion_por_id,
+    mostrar_view_crear,
     crear_suscripcion,
     actualizar_suscripcion,
     eliminar_suscripcion,
