@@ -9,6 +9,7 @@ require('dotenv').config();
 const app = express();
 
 const suscripcionRoutes = require('./routes/suscripcion.routes.js');
+const loginRoutes = require('./routes/login.routes.js');
 
 app.use(morgan('dev'));
 app.use(helmet());
@@ -20,6 +21,7 @@ app.use(express.json());
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+app.use('/', loginRoutes);
 app.use('/api/', suscripcionRoutes);
 
 app.use((req, res, next) => {
