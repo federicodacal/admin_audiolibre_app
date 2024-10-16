@@ -1,5 +1,8 @@
  import { Suscripcion, obtenerTodas, obtenerPorId, insertarSuscripcion, actualizarSuscripcion, eliminarSuscripcion } from '../models/suscripcion';
- import { getSuscripcion, getSuscripciones } from '../services/suscripcion_service';
+ import { getSuscripciones, 
+    getSuscripcion,
+    updateSuscripcion,
+    deleteSuscripcion } from '../services/suscripcion_service';
 
 const connect_mongo = require('../database/connect_mongo');
 const SuscripcionModel = require('../models/suscripcion.model');
@@ -52,45 +55,34 @@ export const crear_suscripcion = async (req:any, res:any) => {
 };
 
 export const actualizar_suscripcion = async (req:any, res:any) => {
-    let obj_response = { hubo_error: false, msj_a_mostrar: "", content: {} };
+    const id = req.params.id; 
+    const { tipo, duracion_meses, porcentaje_plataforma } = req.body; 
+    const suscripcionModificar = new Suscripcion(id, tipo, duracion_meses, porcentaje_plataforma);
 
-    try {
-        const { id, tipo, duracion_meses, porcentaje_plataforma } = req.body;  
-        const suscripcionActualizada = new Suscripcion(id, tipo, duracion_meses, porcentaje_plataforma);
-        const filasAfectadas = await actualizarSuscripcion(suscripcionActualizada);
-        if (filasAfectadas > 0) {
-            obj_response.msj_a_mostrar = "Suscripción actualizada con éxito.";
-            res.status(200).json(obj_response);
-        } else {
-            obj_response.msj_a_mostrar = "Suscripción no encontrada.";
-            res.status(404).json(obj_response);
-        }
-    } catch (error) {
-        console.error(error);
-        obj_response.hubo_error = true;
-        obj_response.msj_a_mostrar = "Ocurrió un problema actualizando la suscripción.";
-        res.status(500).json(obj_response);
+    console.log("estoy en update");
+    console.log("ID:"+id);
+    console.log(suscripcionModificar.toString());
+
+    const response = await updateSuscripcion(suscripcionModificar);
+
+    if(!response.hubo_error) {
+        res.redirect('/api/suscripciones');
+    }
+    else {
+        res.render('error');
     }
 };
 
 export const eliminar_suscripcion = async (req:any, res:any) => {
-    let obj_response = { hubo_error: false, msj_a_mostrar: "", content: {} };
+    const id = Number(req.params.id); 
 
-    try {
-        const { id } = req.body; 
-        const filasAfectadas = await eliminarSuscripcion(id);
-        if (filasAfectadas > 0) {
-            obj_response.msj_a_mostrar = "Suscripción eliminada con éxito.";
-            res.status(200).json(obj_response);
-        } else {
-            obj_response.msj_a_mostrar = "Suscripción no encontrada.";
-            res.status(404).json(obj_response);
-        }
-    } catch (error) {
-        console.error(error);
-        obj_response.hubo_error = true;
-        obj_response.msj_a_mostrar = "Ocurrió un problema eliminando la suscripción.";
-        res.status(500).json(obj_response);
+    const response = await deleteSuscripcion(id);
+
+    if(!response.hubo_error) {
+        res.redirect('/api/suscripciones');
+    }
+    else {
+        res.render('error');
     }
 };
 

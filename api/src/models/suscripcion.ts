@@ -14,6 +14,10 @@ export class Suscripcion
         this.duracion_meses = duracion_meses;
         this.porcentaje_plataforma = porcentaje_plataforma;
     }
+
+    toString() {
+        return `ID: ${this.id}, Tipo: ${this.tipo}, Duración: ${this.duracion_meses}, Porcentaje: ${this.porcentaje_plataforma}`;
+    }
 }
 
 export const obtenerTodas = (): Promise<Suscripcion[]> => {
