@@ -8,6 +8,8 @@ require('dotenv').config();
 
 const app = express();
 
+const methodOverride = require('method-override');
+
 const suscripcionRoutes = require('./routes/suscripcion.routes.js');
 const loginRoutes = require('./routes/login.routes.js');
 
@@ -16,6 +18,7 @@ app.use(helmet());
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(methodOverride('_method'));
 
 /* Template engine */
 app.set('view engine', 'ejs');
