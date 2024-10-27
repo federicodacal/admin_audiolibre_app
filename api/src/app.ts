@@ -3,6 +3,7 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
 import path from 'path';
+import cookieParser from 'cookie-parser';
 
 require('dotenv').config();
 
@@ -19,6 +20,7 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride('_method'));
+app.use(cookieParser());
 
 /* Template engine */
 app.set('view engine', 'ejs');

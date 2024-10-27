@@ -92,7 +92,7 @@ export const obtener_mongo  = async (req:any, res:any) => {
     } catch (error) {
         console.error(error);
         obj_response.hubo_error = true;
-        obj_response.msj_a_mostrar = "Ocurrió obteniendo las suscripciones.";
+        obj_response.msj_a_mostrar = "Ocurrió un problema obteniendo las suscripciones.";
         res.status(500).json(obj_response);
     }
 };
