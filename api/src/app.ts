@@ -12,8 +12,8 @@ const app = express();
 const methodOverride = require('method-override');
 
 const loginRoutes = require('./routes/login.routes.js');
-const suscripcionesViewsRoutes = require('./routes/suscripcion_views.routes.js');
 const suscripcionRoutes = require('./routes/suscripcion.routes.js');
+const suscripcionApiRoutes = require('./routes/suscripcion_api.routes.js');
 
 app.use(morgan('dev'));
 app.use(helmet());
@@ -28,8 +28,8 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use('/', loginRoutes);
-app.use('/', suscripcionesViewsRoutes);
-app.use('/api/', suscripcionRoutes);
+app.use('/', suscripcionRoutes);
+app.use('/api/', suscripcionApiRoutes);
 
 app.use((req, res, next) => {
     res.status(404).render('error');

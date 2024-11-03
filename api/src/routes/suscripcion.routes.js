@@ -11,6 +11,4 @@ suscripcionesRoutes.post('/nuevaSuscripcion', cookieJwtAuth, suscripcionControll
 suscripcionesRoutes.put('/suscripciones/modificar/:id', cookieJwtAuth, suscripcionController.actualizar_suscripcion);
 suscripcionesRoutes.delete('/suscripciones/eliminar/:id', cookieJwtAuth, suscripcionController.eliminar_suscripcion);
 
-suscripcionesRoutes.get('/mongo', suscripcionController.obtener_mongo);
-
 module.exports = suscripcionesRoutes;

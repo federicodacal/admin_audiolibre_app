@@ -1,4 +1,6 @@
 import { Suscripcion, obtenerTodas, obtenerPorId, insertarSuscripcion, actualizarSuscripcion, eliminarSuscripcion } from '../models/suscripcion';
+import { getNextSequence } from '../utils/collection_sequence';
+const SuscripcionModel = require('../models/suscripcion.model');
 
 export const getSuscripciones = async() => {
 
@@ -98,10 +100,114 @@ export const deleteSuscripcion = async(id:number) => {
     }
 }
 
+/* 
+MONGO DB
+*/
+
+export const getAll = async() => {
+    let obj_response = { hubo_error: false, msj_a_mostrar: "", content: {} };
+
+    try {
+        const data = await SuscripcionModel.find();
+        obj_response.msj_a_mostrar = "OK";
+        obj_response.content = data;
+        return obj_response;
+    } catch (error) {
+        console.error(error);
+        obj_response.hubo_error = true;
+        obj_response.msj_a_mostrar = "Ocurrió un problema obteniendo las suscripciones: " + error;
+        return obj_response;
+    }
+}
+
+export const getOneById = async (id:number) => {
+    let obj_response = { hubo_error: false, msj_a_mostrar: "", content: {} };
+
+    try {
+        const data = await SuscripcionModel.findOne({id});
+        if (!data) {
+            obj_response.hubo_error = true;
+            obj_response.msj_a_mostrar = `Suscripción ${id} no encontrada`;
+        } else {
+            obj_response.msj_a_mostrar = "OK";
+            obj_response.content = data;
+        }
+    } catch (error) {
+        console.error(error);
+        obj_response.hubo_error = true;
+        obj_response.msj_a_mostrar = "Ocurrió un problema obteniendo la suscripción: " + error;
+    }
+    return obj_response;
+};
+
+export const create = async (suscripcion:any) => {
+    let obj_response = { hubo_error: false, msj_a_mostrar: "", content: {} };
+
+    try {
+
+        suscripcion.id = await getNextSequence('suscripcion_id');
+
+        const newSuscripcion = new SuscripcionModel(suscripcion);
+        const savedSuscripcion = await newSuscripcion.save();
+        obj_response.msj_a_mostrar = "Suscripción creada con éxito";
+        obj_response.content = savedSuscripcion;
+    } catch (error) {
+        console.error(error);
+        obj_response.hubo_error = true;
+        obj_response.msj_a_mostrar = "Ocurrió un problema creando la suscripción: " + error;
+    }
+    return obj_response;
+};
+
+export const update = async (id:number, data:any) => {
+    let obj_response = { hubo_error: false, msj_a_mostrar: "", content: {} };
+
+    try {
+        data.fecha_modificacion = Date.now();
+        const updatedSuscripcion = await SuscripcionModel.findOneAndUpdate({id}, data, { new: true });
+        if (!updatedSuscripcion) {
+            obj_response.hubo_error = true;
+            obj_response.msj_a_mostrar = "Suscripción no encontrada";
+        } else {
+            obj_response.msj_a_mostrar = "Suscripción actualizada con éxito";
+            obj_response.content = updatedSuscripcion;
+        }
+    } catch (error) {
+        console.error(error);
+        obj_response.hubo_error = true;
+        obj_response.msj_a_mostrar = "Ocurrió un problema actualizando la suscripción: " + error;
+    }
+    return obj_response;
+};
+
+export const deleteOne = async (id:number) => {
+    let obj_response = { hubo_error: false, msj_a_mostrar: "", content: {} };
+
+    try {
+        const deletedSuscripcion = await SuscripcionModel.findOneAndDelete({id});
+        if (!deletedSuscripcion) {
+            obj_response.hubo_error = true;
+            obj_response.msj_a_mostrar = "Suscripción no encontrada";
+        } else {
+            obj_response.msj_a_mostrar = "Suscripción eliminada con éxito";
+        }
+    } catch (error) {
+        console.error(error);
+        obj_response.hubo_error = true;
+        obj_response.msj_a_mostrar = "Ocurrió un problema eliminando la suscripción: " + error;
+    }
+    return obj_response;
+};
+
 module.exports = {
     getSuscripciones, 
     getSuscripcion,
     addSuscripcion,
     updateSuscripcion,
-    deleteSuscripcion
+    deleteSuscripcion,
+    getAll,
+    getOneById,
+    create,
+    update,
+    deleteOne
 }

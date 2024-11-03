@@ -1,8 +1,11 @@
  import { Suscripcion } from '../models/suscripcion';
- import { getSuscripciones, getSuscripcion, updateSuscripcion, deleteSuscripcion, addSuscripcion } from '../services/suscripcion_service';
+ import { 
+    getSuscripciones, getSuscripcion, updateSuscripcion, deleteSuscripcion, addSuscripcion,
+    getAll, getOneById, create, update, deleteOne 
+} from '../services/suscripcion_service';
 
 const connect_mongo = require('../database/connect_mongo');
-const SuscripcionModel = require('../models/suscripcion.model');
+
 connect_mongo();
 
 export const obtener_suscripciones = async (req:any, res:any) => 
@@ -81,21 +84,66 @@ export const eliminar_suscripcion = async (req:any, res:any) => {
     }
 };
 
-export const obtener_mongo  = async (req:any, res:any) => {
-    let obj_response = { hubo_error: false, msj_a_mostrar: "", content: {} };
+/***** Mongo db *****/
 
-    try {
-        const data = await SuscripcionModel.find();
-        obj_response.msj_a_mostrar = "OK";
-        obj_response.content = data;
-        return res.status(200).json(data)
-    } catch (error) {
-        console.error(error);
-        obj_response.hubo_error = true;
-        obj_response.msj_a_mostrar = "Ocurrió un problema obteniendo las suscripciones.";
-        res.status(500).json(obj_response);
+export const obtenerTodas  = async (req:any, res:any) => {
+    const response = await getAll();
+
+    if(!response.hubo_error) {
+        const suscripciones = response.content;
+        res.status(200).send(suscripciones);
+    }
+    else {
+        res.status(500).send(response.msj_a_mostrar);
     }
 };
+
+export const obtenerPorId = async (req:any, res:any) => {
+    const { id } = req.params;
+    const response = await getOneById(id);
+
+    if (!response.hubo_error) {
+        const suscripcion = response.content;
+        res.status(200).send(suscripcion);
+    } else {
+        res.status(500).send(response.msj_a_mostrar);
+    }
+};
+
+export const crearSuscripcion = async (req:any, res:any) => {
+    const data = req.body;
+    const response = await create(data);
+
+    if (!response.hubo_error) {
+        res.status(201).send(response.content);
+    } else {
+        res.status(500).send(response.msj_a_mostrar);
+    }
+};
+
+export const actualizarSuscripcion = async (req:any, res:any) => {
+    const { id } = req.params;
+    const data = req.body;
+    const response = await update(id, data);
+
+    if (!response.hubo_error) {
+        res.status(200).send(response.content);
+    } else {
+        res.status(500).send(response.msj_a_mostrar);
+    }
+};
+
+export const eliminarSuscripcion = async (req:any, res:any) => {
+    const { id } = req.params;
+    const response = await deleteOne(id);
+
+    if (!response.hubo_error) {
+        res.status(200).send(response.msj_a_mostrar);
+    } else {
+        res.status(500).send(response.msj_a_mostrar);
+    }
+};
+
 
 module.exports = {
     obtener_suscripciones,
@@ -104,5 +152,9 @@ module.exports = {
     crear_suscripcion,
     actualizar_suscripcion,
     eliminar_suscripcion,
-    obtener_mongo
+    obtenerTodas,
+    obtenerPorId,
+    crearSuscripcion,
+    actualizarSuscripcion,
+    eliminarSuscripcion
 };
