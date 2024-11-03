@@ -8,8 +8,11 @@ import cookieParser from 'cookie-parser';
 require('dotenv').config();
 
 const app = express();
-
 const methodOverride = require('method-override');
+
+/* Conexión mongodb */
+const connect_mongo = require('./database/connect_mongo');
+connect_mongo();
 
 const loginRoutes = require('./routes/login.routes.js');
 const suscripcionRoutes = require('./routes/suscripcion.routes.js');

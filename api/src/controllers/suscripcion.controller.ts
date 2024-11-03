@@ -4,10 +4,6 @@
     getAll, getOneById, create, update, deleteOne 
 } from '../services/suscripcion_service';
 
-const connect_mongo = require('../database/connect_mongo');
-
-connect_mongo();
-
 export const obtener_suscripciones = async (req:any, res:any) => 
 {
     const response = await getSuscripciones();
