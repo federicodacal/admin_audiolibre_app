@@ -4,19 +4,19 @@ import helmet from 'helmet';
 import cors from 'cors';
 import path from 'path';
 import cookieParser from 'cookie-parser';
+import mongoose from 'mongoose';
 
 require('dotenv').config();
 
 const app = express();
 const methodOverride = require('method-override');
-
-/* Conexión mongodb */
-const connect_mongo = require('./database/connect_mongo');
-connect_mongo();
+const Grid = require("gridfs-stream");
+const { createStorage } = require('./middlewares/upload');
 
 const loginRoutes = require('./routes/login.routes.js');
 const suscripcionRoutes = require('./routes/suscripcion.routes.js');
 const suscripcionApiRoutes = require('./routes/suscripcion_api.routes.js');
+const carrouselApiRoutes = require('./routes/carrousel.routes.js');
 
 app.use(morgan('dev'));
 app.use(helmet());
@@ -30,12 +30,24 @@ app.use(cookieParser());
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-app.use('/', loginRoutes);
-app.use('/', suscripcionRoutes);
-app.use('/api/', suscripcionApiRoutes);
+/* Conexión mongodb */
+const connect_mongo = require('./database/connect_mongo');
+let gfs;
+connect_mongo().then(() => {
+    const conn = mongoose.connection;
+    gfs = Grid(conn.db, mongoose.mongo);
 
-app.use((req, res, next) => {
-    res.status(404).render('error');
+    const upload = createStorage(conn); // Crea el middleware de carga
+
+    // Rutas
+    app.use('/', loginRoutes);
+    app.use('/', suscripcionRoutes);
+    app.use('/api/', suscripcionApiRoutes);
+    app.use('/api/', carrouselApiRoutes(upload)); // Pasa upload a las rutas
+    app.use((req, res, next) => {
+        res.status(404).render('error');
+    });
 });
+
 
 export default app;
