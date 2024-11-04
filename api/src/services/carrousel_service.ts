@@ -30,7 +30,10 @@ export const getOneById = async (id:number) => {
             obj_response.msj_a_mostrar = `Carrousel ${id} no encontrada`;
         } else {
             obj_response.msj_a_mostrar = "OK";
-            obj_response.content = data;
+            obj_response.content = {
+                ...data.toObject(),
+                imgUrl: `http://localhost:5000/api/carrousel/imagen/${data.file_id}`
+            };
         }
     } catch (error) {
         console.error(error);
