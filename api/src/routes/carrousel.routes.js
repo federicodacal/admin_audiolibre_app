@@ -10,6 +10,7 @@ const carrouselApiRoutes = (upload) => {
     router.post('/carrousel', upload.single("img"), carrouselController.crearCarrousel);
     router.put('/carrousel/modificar/:id', carrouselController.actualizarCarrousel);
     router.delete('/carrousel/eliminar/:id', carrouselController.eliminarCarrousel);
+    router.get('/carrousel/imagen/:id', carrouselController.obtenerImagenPorId);
 
     return router;
 };

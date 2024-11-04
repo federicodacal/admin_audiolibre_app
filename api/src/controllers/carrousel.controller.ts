@@ -1,9 +1,10 @@
+import mongoose from 'mongoose';
 import { 
    getAll, getOneById, create, update, deleteOne 
 } from '../services/carrousel_service';
 
 
-export const obtenerTodas  = async (req:any, res:any) => {
+export const obtenerTodas = async (req:any, res:any) => {
    const response = await getAll();
 
    if(!response.hubo_error) {
@@ -71,11 +72,48 @@ export const eliminarCarrousel = async (req:any, res:any) => {
    }
 };
 
+export const obtenerImagenPorId = async (req: any, res: any) => {
+    const fileId = req.params.id;
+    console.log("Solicitando imagen con ID:", fileId);
+
+    // Conectar a la base de datos
+    const conn = mongoose.connection;
+    const gfs = new mongoose.mongo.GridFSBucket(conn.db, { bucketName: 'images' });
+
+    try {
+        // Verificar si el archivo existe
+        const file = await conn.db.collection('images.files').findOne({ _id: new mongoose.mongo.ObjectId(fileId) });
+        if (!file) {
+            return res.status(404).send('Imagen no encontrada');
+        }
+
+        // Establecer el tipo de contenido
+        res.set('Content-Type', file.contentType || 'application/octet-stream');
+
+        // Iniciar el stream de descarga
+        const downloadStream = gfs.openDownloadStream(file._id);
+
+        // Pipe del stream directamente a la respuesta
+        downloadStream.pipe(res).on('error', (error:any) => {
+            console.error('Error al enviar la imagen:', error);
+            res.status(500).send('Error al obtener la imagen');
+        });
+        
+        downloadStream.on('finish', () => {
+            console.log('Imagen enviada correctamente');
+        });
+    } catch (error) {
+        console.error('Error al obtener la imagen:', error);
+        res.status(500).send('Error al obtener la imagen');
+    }
+};
+
 
 module.exports = {
    obtenerTodas,
    obtenerPorId,
    crearCarrousel,
    actualizarCarrousel,
-   eliminarCarrousel
+   eliminarCarrousel,
+   obtenerImagenPorId
 };

@@ -6,8 +6,11 @@ export const getAll = async() => {
 
     try {
         const data = await CarrouselModel.find();
+        obj_response.content = data.map((item:any) => ({
+            ...item.toObject(),
+            imgUrl: `http://localhost:5000/api/carrousel/imagen/${item.file_id}`
+        }));
         obj_response.msj_a_mostrar = "OK";
-        obj_response.content = data;
         return obj_response;
     } catch (error) {
         console.error(error);
