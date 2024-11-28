@@ -3,8 +3,8 @@ const { Schema } = mongoose;
 
 const suscripcionSchema  = new Schema({
     id:Number,
-    tipo:String,
-    duracion_meses:Number,
+    titulo:String,
+    duracion_dias:Number,
     porcentaje_plataforma:Number,
     precio:Number,
     fecha_creacion: { type: Date, default: Date.now }, 
