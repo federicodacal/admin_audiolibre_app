@@ -17,6 +17,7 @@ const loginRoutes = require('./routes/login.routes.js');
 const suscripcionRoutes = require('./routes/suscripcion.routes.js');
 const suscripcionApiRoutes = require('./routes/suscripcion_api.routes.js');
 const carrouselApiRoutes = require('./routes/carrousel.routes.js');
+const moderadoresApiRoutes = require('./routes/moderador.routes.js');
 
 app.use(morgan('dev'));
 app.use(helmet());
@@ -43,6 +44,7 @@ connect_mongo().then(() => {
     app.use('/', loginRoutes);
     app.use('/', suscripcionRoutes);
     app.use('/api/', suscripcionApiRoutes);
+    app.use('/api/', moderadoresApiRoutes);
     app.use('/api/', carrouselApiRoutes(upload)); // Pasa upload a las rutas
     app.use((req, res, next) => {
         res.status(404).render('error');
