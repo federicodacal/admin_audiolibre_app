@@ -23,7 +23,10 @@ const generosApiRoutes = require('./routes/genero.routes.js');
 
 app.use(morgan('dev'));
 app.use(helmet());
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000', // Dirección específica del frontend
+    credentials: true, // Habilita el uso de cookies y credenciales
+}));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride('_method'));
