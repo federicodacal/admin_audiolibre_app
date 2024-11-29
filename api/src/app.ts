@@ -24,7 +24,7 @@ const generosApiRoutes = require('./routes/genero.routes.js');
 app.use(morgan('dev'));
 app.use(helmet());
 app.use(cors({
-    origin: ['http://localhost:3000', 'https://react-audiolibre-vercel.vercel.app/'],
+    origin: ['http://localhost:3000', 'https://react-audiolibre-vercel.vercel.app'],
     credentials: true, 
 }));
 app.use(express.urlencoded({ extended: true }));
