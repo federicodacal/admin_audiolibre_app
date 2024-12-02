@@ -1,6 +1,11 @@
 import { getNextSequence } from '../utils/collection_sequence';
 const CarrouselModel = require('../models/carrousel.model');
 
+const URL = {
+    DEV : 'http://localhost:5000/api',
+    PROD : 'https://admin-audiolibre-api.vercel.app/api' 
+}
+
 export const getAll = async() => {
     let obj_response = { hubo_error: false, msj_a_mostrar: "", content: {} };
 
@@ -8,7 +13,7 @@ export const getAll = async() => {
         const data = await CarrouselModel.find();
         obj_response.content = data.map((item:any) => ({
             ...item.toObject(),
-            imgUrl: `http://localhost:5000/api/carrousel/imagen/${item.file_id}`
+            imgUrl: `${URL.PROD}/carrousel/imagen/${item.file_id}`
         }));
         obj_response.msj_a_mostrar = "OK";
         return obj_response;
@@ -32,7 +37,7 @@ export const getOneById = async (id:number) => {
             obj_response.msj_a_mostrar = "OK";
             obj_response.content = {
                 ...data.toObject(),
-                imgUrl: `http://localhost:5000/api/carrousel/imagen/${data.file_id}`
+                imgUrl: `${URL.PROD}/api/carrousel/imagen/${data.file_id}`
             };
         }
     } catch (error) {
