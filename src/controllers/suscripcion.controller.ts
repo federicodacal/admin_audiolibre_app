@@ -1,9 +1,10 @@
- import { Suscripcion } from '../models/suscripcion';
- import { 
-    getSuscripciones, getSuscripcion, updateSuscripcion, deleteSuscripcion, addSuscripcion,
+//import { Suscripcion } from '../models/suscripcion';
+import { 
+    //getSuscripciones, getSuscripcion, updateSuscripcion, deleteSuscripcion, addSuscripcion,
     getAll, getOneById, create, update, deleteOne 
 } from '../services/suscripcion_service';
 
+/*
 export const obtener_suscripciones = async (req:any, res:any) => 
 {
     const response = await getSuscripciones();
@@ -79,6 +80,7 @@ export const eliminar_suscripcion = async (req:any, res:any) => {
         res.render('error');
     }
 };
+*/
 
 /***** Mongo db *****/
 
@@ -142,12 +144,12 @@ export const eliminarSuscripcion = async (req:any, res:any) => {
 
 
 module.exports = {
-    obtener_suscripciones,
-    obtener_suscripcion_por_id,
-    mostrar_view_crear,
-    crear_suscripcion,
-    actualizar_suscripcion,
-    eliminar_suscripcion,
+    //obtener_suscripciones,
+    //obtener_suscripcion_por_id,
+    //mostrar_view_crear,
+    //crear_suscripcion,
+    //actualizar_suscripcion,
+    //eliminar_suscripcion,
     obtenerTodas,
     obtenerPorId,
     crearSuscripcion,

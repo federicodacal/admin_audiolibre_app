@@ -1,7 +1,8 @@
-import { Suscripcion, obtenerTodas, obtenerPorId, insertarSuscripcion, actualizarSuscripcion, eliminarSuscripcion } from '../models/suscripcion';
+//import { Suscripcion, obtenerTodas, obtenerPorId, insertarSuscripcion, actualizarSuscripcion, eliminarSuscripcion } from '../models/suscripcion';
 import { getNextSequence } from '../utils/collection_sequence';
 const SuscripcionModel = require('../models/suscripcion.model');
 
+/*
 export const getSuscripciones = async() => {
 
     let obj_response = {hubo_error: false, msj_a_mostrar:"" ,content: {}}
@@ -99,6 +100,7 @@ export const deleteSuscripcion = async(id:number) => {
         return obj_response;
     }
 }
+*/
 
 /* 
 MONGO DB
@@ -200,11 +202,6 @@ export const deleteOne = async (id:number) => {
 };
 
 module.exports = {
-    getSuscripciones, 
-    getSuscripcion,
-    addSuscripcion,
-    updateSuscripcion,
-    deleteSuscripcion,
     getAll,
     getOneById,
     create,

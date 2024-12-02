@@ -1,7 +1,7 @@
 const {Router} = require("express");
 const suscripcionController = require('../controllers/suscripcion.controller');
 const { cookieJwtAuth } = require("../middlewares/jwt");
-
+/*
 const suscripcionesRoutes = Router();
 
 suscripcionesRoutes.get('/suscripciones', cookieJwtAuth, suscripcionController.obtener_suscripciones);
@@ -12,3 +12,4 @@ suscripcionesRoutes.put('/suscripciones/modificar/:id', cookieJwtAuth, suscripci
 suscripcionesRoutes.delete('/suscripciones/eliminar/:id', cookieJwtAuth, suscripcionController.eliminar_suscripcion);
 
 module.exports = suscripcionesRoutes;
+*/

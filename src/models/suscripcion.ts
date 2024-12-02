@@ -1,3 +1,4 @@
+/*
 const pool = require('../database/connect_mysql');  
 
 export class Suscripcion 
@@ -109,3 +110,4 @@ export const eliminarSuscripcion = (id: number): Promise<number> => {
         });
     });
 };
+*/

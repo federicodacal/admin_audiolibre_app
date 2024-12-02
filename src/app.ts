@@ -14,7 +14,7 @@ const Grid = require("gridfs-stream");
 const { createStorage } = require('./middlewares/upload');
 
 const loginRoutes = require('./routes/login.routes.js');
-const suscripcionRoutes = require('./routes/suscripcion.routes.js');
+//const suscripcionRoutes = require('./routes/suscripcion.routes.js');
 const suscripcionApiRoutes = require('./routes/suscripcion_api.routes.js');
 const carrouselApiRoutes = require('./routes/carrousel.routes.js');
 const moderadoresApiRoutes = require('./routes/moderador.routes.js');
@@ -47,7 +47,7 @@ connect_mongo().then(() => {
 
     // Rutas
     app.use('/', loginRoutes);
-    app.use('/', suscripcionRoutes);
+    //app.use('/', suscripcionRoutes);
     app.use('/api/', suscripcionApiRoutes);
     app.use('/api/', moderadoresApiRoutes);
     app.use('/api/', categoriasApiRoutes);
