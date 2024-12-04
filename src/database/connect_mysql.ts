@@ -1,4 +1,4 @@
-import mysql from 'mysql2'
+/*import mysql from 'mysql2'
 
 const pool = mysql.createPool({
     host: process.env.MYSQL_HOST,
@@ -14,7 +14,7 @@ pool.getConnection((err:any, conn:any) => {
     }
     console.log("Conexión exitosa");
     conn.release();
-});
+}); 
 
-module.exports = pool;
+module.exports = pool;*/
 
