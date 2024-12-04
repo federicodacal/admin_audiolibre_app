@@ -1,6 +1,12 @@
 //import { Suscripcion, obtenerTodas, obtenerPorId, insertarSuscripcion, actualizarSuscripcion, eliminarSuscripcion } from '../models/suscripcion';
+import { MongoClient } from 'mongodb';
 import { getNextSequence } from '../utils/collection_sequence';
 const SuscripcionModel = require('../models/suscripcion.model');
+
+const uri = process.env.MONGODB_URI || ''; 
+const client = new MongoClient(uri);
+const dbName = 'audiolibredb';
+const collectionName = 'suscripcionmodels';
 
 /*
 export const getSuscripciones = async() => {
@@ -148,11 +154,23 @@ export const create = async (suscripcion:any) => {
     try {
 
         suscripcion.id = await getNextSequence('suscripcion_id');
+        
+        console.log('suscripcion sequence id: ', suscripcion.id);
+        console.log('suscripcion en service: ', suscripcion);
 
-        const newSuscripcion = new SuscripcionModel(suscripcion);
-        const savedSuscripcion = await newSuscripcion.save();
-        obj_response.msj_a_mostrar = "Suscripción creada con éxito";
-        obj_response.content = savedSuscripcion;
+        const result = await SuscripcionModel.collection.insertOne({
+            titulo: suscripcion.titulo,
+            id: suscripcion.id,
+            duracion_dias: suscripcion.duracion_dias,
+            porcentaje_plataforma: suscripcion.porcentaje_plataforma,
+            precio: suscripcion.precio,
+            fecha_creacion: new Date(),
+            fecha_modificacion: new Date(),
+        });
+
+        console.log('Suscripcion insertado:', result);
+        obj_response.msj_a_mostrar = "Suscripcion creada con éxito";
+        obj_response.content = result;
     } catch (error) {
         console.error(error);
         obj_response.hubo_error = true;
@@ -165,14 +183,38 @@ export const update = async (id:number, data:any) => {
     let obj_response = { hubo_error: false, msj_a_mostrar: "", content: {} };
 
     try {
-        data.fecha_modificacion = Date.now();
-        const updatedSuscripcion = await SuscripcionModel.findOneAndUpdate({id}, data, { new: true });
-        if (!updatedSuscripcion) {
+        await client.connect();
+        const db = client.db(dbName);
+        const collection = db.collection(collectionName);
+
+        data.fecha_modificacion = new Date();
+        console.log("Data en update:", data);
+
+        const filter = { id: Number(id) };
+        console.log("Filtro de búsqueda:", filter);
+
+        const existingSuscripcion = await collection.findOne(filter);
+        if (!existingSuscripcion) {
             obj_response.hubo_error = true;
-            obj_response.msj_a_mostrar = "Suscripción no encontrada";
+            obj_response.msj_a_mostrar = "Suscripcion no encontrada.";
+            return obj_response;
+        }
+
+        console.log("Documento encontrado:", existingSuscripcion);
+
+        delete data._id;
+
+        const updateResult = await collection.updateOne(filter, { $set: data });
+        console.log("Resultado de updateOne:", updateResult);
+
+        if (updateResult.matchedCount === 0) {
+            obj_response.hubo_error = true;
+            obj_response.msj_a_mostrar = "Suscripcion no encontrada.";
+        } else if (updateResult.modifiedCount === 0) {
+            obj_response.msj_a_mostrar = "Suscripcion encontrada, pero no se realizaron cambios.";
         } else {
-            obj_response.msj_a_mostrar = "Suscripción actualizada con éxito";
-            obj_response.content = updatedSuscripcion;
+            obj_response.msj_a_mostrar = "Suscripcion actualizada con éxito.";
+            obj_response.content = await collection.findOne(filter) || {};
         }
     } catch (error) {
         console.error(error);

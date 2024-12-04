@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const carrouselSchema  = new Schema({
     titulo:String,
-    id:Number,
+    id: {type: Number, unique: true},
     descripcion:String,
     file_id: { type: Schema.Types.ObjectId, ref: 'images.files' },
     fecha_creacion: { type: Date, default: Date.now }, 

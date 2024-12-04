@@ -33,12 +33,10 @@ export const crearCarrousel = async (req:any, res:any) => {
     console.log('Datos recibidos:', req.body);
     console.log('Archivo recibido:', req.file);
     const data = req.body;
-
+    
     if (!req.file) {
         return res.status(404).send('No se envió la imagen');
     }
-
-    // Guardar el ID del archivo en el modelo
     data.file_id = req.file.id;
 
     const response = await create(data);
@@ -78,6 +76,15 @@ export const obtenerImagenPorId = async (req: any, res: any) => {
 
     // Conectar a la base de datos
     const conn = mongoose.connection;
+
+    if(!conn.readyState) {
+        return res.status(500).send('Base de datos no conectado');
+    }
+
+    if(!conn.db) {
+        return res.status(500).send('Conexión de base de datos no válida');
+    }
+
     const gfs = new mongoose.mongo.GridFSBucket(conn.db, { bucketName: 'images' });
 
     try {
@@ -101,7 +108,7 @@ export const obtenerImagenPorId = async (req: any, res: any) => {
         
         downloadStream.on('finish', () => {
             console.log('Imagen enviada correctamente');
-        });
+        }); 
     } catch (error) {
         console.error('Error al obtener la imagen:', error);
         res.status(500).send('Error al obtener la imagen');
