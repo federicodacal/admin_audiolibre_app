@@ -39,23 +39,38 @@ app.set('views', path.join(__dirname, 'views'));
 /* Conexión mongodb */
 const connect_mongo = require('./database/connect_mongo');
 let gfs;
+
+app.use((req, res, next) => {
+    if (mongoose.connection.readyState !== 1) {
+        console.warn('MongoDB no está conectado.');
+        return res.status(503).send('Servicio no disponible: Problema con la base de datos.');
+    }
+    next(); 
+});
+
 connect_mongo().then(() => {
     const conn = mongoose.connection;
-    gfs = Grid(conn.db, mongoose.mongo);
+
+    conn.once('open', () => {
+        console.log('Conexión a MongoDB abierta');
+        gfs = Grid(conn.db, mongoose.mongo);
+    });
 
     const upload = createStorage(conn); // Crea el middleware de carga
-
+    
     // Rutas
     app.use('/', loginRoutes);
-    //app.use('/', suscripcionRoutes);
     app.use('/api/', suscripcionApiRoutes);
     app.use('/api/', moderadoresApiRoutes);
     app.use('/api/', categoriasApiRoutes);
-    app.use('/api/', generosApiRoutes);
     app.use('/api/', carrouselApiRoutes(upload)); // Pasa upload a las rutas
+    app.use('/api/', generosApiRoutes);
     app.use((req, res, next) => {
-        res.status(404).render('error');
+        res.status(404).send('Ruta no encontrada');
     });
+}).catch((err:any) => {
+    console.error("Error de conexión a MongoDB:", err);
+    process.exit(1);
 });
 
 

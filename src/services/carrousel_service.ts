@@ -19,7 +19,7 @@ export const getAll = async() => {
         const data = await CarrouselModel.find();
         obj_response.content = data.map((item:any) => ({
             ...item.toObject(),
-            imgUrl: `${URL.DEV}/carrousel/imagen/${item.file_id}`
+            imgUrl: `${URL.PROD}/carrousel/imagen/${item.file_id}`
         }));
         obj_response.msj_a_mostrar = "OK";
         return obj_response;
@@ -43,7 +43,7 @@ export const getOneById = async (id:number) => {
             obj_response.msj_a_mostrar = "OK";
             obj_response.content = {
                 ...data.toObject(),
-                imgUrl: `${URL.DEV}/carrousel/imagen/${data.file_id}`
+                imgUrl: `${URL.PROD}/carrousel/imagen/${data.file_id}`
             };
         }
     } catch (error) {
